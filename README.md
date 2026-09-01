@@ -12,7 +12,7 @@ This automation provides an early warning system by combining **AI classificatio
 
 For a detailed explanation of the business problem, pain points, project goal, and proposed automation:
 
-👉 [View Problem Statement](https://bluemoonways.github.io/n8n-expense-categorizer-budget-alert/)
+👉 [View Problem Statement](https://bluemoonways.github.io/expense-categorizer-budget-alert/)
 
 ## 🔄 Workflow Chart
 
