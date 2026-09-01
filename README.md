@@ -8,6 +8,12 @@ Managing expenses manually can be time-consuming, and people often realize they 
 
 This automation provides an early warning system by combining **AI classification, data storage, JavaScript calculations, conditional logic, and email notifications**.
 
+## 📋 Problem Statement
+
+For a detailed explanation of the business problem, pain points, project goal, and proposed automation:
+
+👉 [View Problem Statement](https://bluemoonways.github.io/n8n-expense-categorizer-budget-alert/)
+
 ## 🔄 Workflow Chart
 
 ![Expense Categorizer & Budget Alert Workflow](screenshots/Workflow%20Chart.png)
