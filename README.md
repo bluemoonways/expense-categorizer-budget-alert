@@ -112,6 +112,12 @@ Future versions could include:
 * 📊 Spending trends and analytics
 * 🔔 Multiple notification channels
 
+## 📁 Workflow File
+
+You can view and download the complete n8n workflow here:
+
+👉 [View n8n Workflow JSON](Expense_Categorizer_Budget.json)
+
 ## 👨‍💻 Author
 
 **Faheem Abbas**
