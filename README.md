@@ -10,27 +10,7 @@ This automation provides an early warning system by combining **AI classificatio
 
 ## 🔄 Workflow
 
-```text
-Expense Form
-     ↓
-Google Gemini AI
-     ↓
-Expense Categorization
-     ↓
-Need / Want Classification
-     ↓
-Google Sheets
-     ↓
-Read Existing Expenses
-     ↓
-JavaScript Monthly Calculation
-     ↓
-Budget Check
-     ↓
-IF Over Budget
-     ↓
-Gmail Alert
-```
+![Expense Categorizer & Budget Alert Workflow Flow](screenshots/workflow-flow.png)
 
 ## ✨ Key Features
 
