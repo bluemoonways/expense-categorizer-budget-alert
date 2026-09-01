@@ -128,7 +128,7 @@ You can view and download the complete n8n workflow here:
 
 **Faheem Abbas**
 
-AI Automation & n8n Projects
+AI Automation Specialist | n8n | AI Agents | Workflow Automation | API Integrations
 
 ---
 
