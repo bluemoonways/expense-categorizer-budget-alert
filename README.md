@@ -8,9 +8,9 @@ Managing expenses manually can be time-consuming, and people often realize they 
 
 This automation provides an early warning system by combining **AI classification, data storage, JavaScript calculations, conditional logic, and email notifications**.
 
-## 🔄 Workflow
+## 🔄 Workflow Chart
 
-![Expense Categorizer & Budget Alert Workflow Flow](screenshots/workflow-flow.png)
+![Expense Categorizer & Budget Alert Workflow](screenshots/Workflow%20Chart.png)
 
 ## ✨ Key Features
 
@@ -111,12 +111,6 @@ Future versions could include:
 * 📈 Expense dashboard
 * 📊 Spending trends and analytics
 * 🔔 Multiple notification channels
-
-## 📁 Files
-
-* `Expense_Categorizer_Budget.json` — n8n workflow
-* `Problem_Statement.html` — project problem statement
-* `README.md` — project documentation
 
 ## 👨‍💻 Author
 
