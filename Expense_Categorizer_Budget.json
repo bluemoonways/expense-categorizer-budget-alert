@@ -1,0 +1,407 @@
+{
+  "name": "Expense over Budget",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Expense Over Budget",
+        "formDescription": "Automatically monitors expenses and sends an alert when spending exceeds the allocated budget.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Expense Detail",
+              "placeholder": "Enter your Expense Detial"
+            },
+            {
+              "fieldLabel": "Amount",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "Currency",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "PKR"
+                  },
+                  {
+                    "option": "USD"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Date",
+              "fieldType": "date"
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -1088,
+        -48
+      ],
+      "id": "f64b685b-ebaf-4f3c-ae1b-2dcd8260b4ff",
+      "name": "On form submission",
+      "webhookId": "3bce8f74-eceb-492f-a149-65e73efe3413"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Description: {{ $json['Expense Detail'] }}\nAmount: {{ $json.Amount }} PKR\nDate: {{ $json.Date }}\nUse only these categories:\nFood & Dining\nTransport\nUtilities & Bills\nShopping\nEntertainment\nHealth\nEducation\nRent\nTravel\nGroceries\nSubscription\nOther\nWrite a note in one short sentence (maximum 10 words).\nNever create a new category outside this list.\nCategorize this expense and determine whether it is a Need or Want.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an expert personal finance assistant.\n\nUse ONLY these categories:\n\n- Food & Dining\n- Transport\n- Utilities & Bills\n- Shopping\n- Entertainment\n- Health\n- Other\n\nNever create any new category.\nIf an expense does not fit these categories, classify it as \"Other\".\n\nEssential Mapping Rules:\n\nNeed:\n- Transport\n- Utilities & Bills\n- Health\n\nWant:\n- Shopping\n- Entertainment\n\nFood & Dining:\n- Daily groceries or home food = Need\n- Restaurant, fast food, café or dining out = Want\n\nOther:\n- If the expense is essential, return Need.\n- Otherwise, return Want.\n\nThe \"essential\" field must ONLY contain:\n- Need\n- Want\n\nReturn the response according to the structured output schema only."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -848,
+        -48
+      ],
+      "id": "b89842f2-50a4-4604-ac99-c97232c2b98b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"category\": \"Food & Dining\",\n  \"essential\": \"Want\",\n\"note\": \"Restaurant meal classified as discretionary spending.\"\n}\n  "
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -704,
+        176
+      ],
+      "id": "5328cdf7-1da6-43ae-b04f-7918d8670e4e",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -944,
+        192
+      ],
+      "id": "42315e76-cc56-453e-ac70-9d00236a088f",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1LWmnxzQ1rNCnmSDC1kEnyKUnDyA1XobpRtuFGjsL22E",
+          "mode": "list",
+          "cachedResultName": "Budget Exp Alert",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LWmnxzQ1rNCnmSDC1kEnyKUnDyA1XobpRtuFGjsL22E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LWmnxzQ1rNCnmSDC1kEnyKUnDyA1XobpRtuFGjsL22E/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Category": "={{ $json.output.category }}",
+            "Essential": "={{ $json.output.essential }}",
+            "Note": "={{ $json.output.note }}",
+            "Amount": "={{ $('On form submission').item.json.Amount }}",
+            "Description": "={{ $('On form submission').item.json['Expense Detail'] }}",
+            "Date": "={{ $('On form submission').item.json.Date }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Amount",
+              "displayName": "Amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Essential",
+              "displayName": "Essential",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Note",
+              "displayName": "Note",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -512,
+        -48
+      ],
+      "id": "9e5e8944-cc40-49dc-96f3-35ec9cfe279f",
+      "name": "Append row in sheet"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1LWmnxzQ1rNCnmSDC1kEnyKUnDyA1XobpRtuFGjsL22E",
+          "mode": "list",
+          "cachedResultName": "Budget Exp Alert",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LWmnxzQ1rNCnmSDC1kEnyKUnDyA1XobpRtuFGjsL22E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LWmnxzQ1rNCnmSDC1kEnyKUnDyA1XobpRtuFGjsL22E/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": []
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -304,
+        -48
+      ],
+      "id": "748b372f-3aa0-40bf-948b-0232e0bb1508",
+      "name": "Get row(s) in sheet"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Monthly Budget Limits\nconst budgets = {\n  \"Food & Dining\": 30000,\n  \"Transport\": 15000,\n  \"Utilities & Bills\": 25000,\n  \"Shopping\": 20000,\n  \"Entertainment\": 10000,\n  \"Health\": 15000,\n  \"Other\": 10000,\n};\n\n// Current date\nconst now = new Date();\nconst currentMonth = now.getMonth();\nconst currentYear = now.getFullYear();\n\n// Latest expense (Append Row node)\nconst latest = $('Append row in sheet').first().json;\n\nconst targetCategory = latest.Category;\nconst latestAmount = Number(latest.Amount);\n\n// Calculate total spent in same category & current month\nlet totalSpent = 0;\n\nfor (const item of items) {\n  const row = item.json;\n\n  if (!row.Date || !row.Category || !row.Amount) continue;\n\n  const d = new Date(row.Date);\n\n  if (\n    d.getMonth() === currentMonth &&\n    d.getFullYear() === currentYear &&\n    row.Category === targetCategory\n  ) {\n    totalSpent += Number(row.Amount);\n  }\n}\n\nconst budget = budgets[targetCategory] ?? 0;\nconst remaining = budget - totalSpent;\nconst overBudget = totalSpent > budget;\n\nreturn [\n  {\n    json: {\n      category: targetCategory,\n      spent: totalSpent,\n      budget,\n      remaining,\n      overBudget,\n      latestExpense: latestAmount\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        -48
+      ],
+      "id": "0bf81943-4b0e-4fd3-9a54-69bfd4eb7ed2",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6edad55d-c0e4-4a90-8601-e24daed48720",
+              "leftValue": "={{ $json.overBudget }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        32,
+        -48
+      ],
+      "id": "567cb397-cfec-467b-9cc6-4abe82569937",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json.Email }}",
+        "subject": "=🚨 Budget Alert: {{ $json.category }} Budget Exceeded",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n</head>\n\n<body style=\"margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;\">\n\n<table width=\"100%\" cellpadding=\"20\" cellspacing=\"0\" style=\"background:#f4f7fb;\">\n<tr>\n<td align=\"center\">\n\n<table width=\"650\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.08);\">\n\n<!-- Header -->\n<tr>\n<td style=\"background:#dc2626;color:white;padding:25px;text-align:center;\">\n<h1 style=\"margin:0;\">🚨 Expense Over Budget Alert</h1>\n<p style=\"margin-top:8px;font-size:15px;\">\nYour monthly budget has been exceeded.\n</p>\n</td>\n</tr>\n\n<!-- Body -->\n<tr>\n<td style=\"padding:30px;\">\n\n<p style=\"font-size:16px;color:#333;\">\nHello,\n</p>\n\n<p style=\"color:#555;font-size:15px;\">\nYour recent expense has exceeded the monthly budget limit for the following category.\n</p>\n\n<table width=\"100%\" cellpadding=\"12\" cellspacing=\"0\" style=\"border-collapse:collapse;margin-top:20px;\">\n\n<tr style=\"background:#f8fafc;\">\n<td><strong>Category</strong></td>\n<td>{{ $json.category }}</td>\n</tr>\n\n<tr>\n<td><strong>Budget</strong></td>\n<td>PKR {{ $json.budget }}</td>\n</tr>\n\n<tr style=\"background:#f8fafc;\">\n<td><strong>Total Spent</strong></td>\n<td>PKR {{ $json.spent }}</td>\n</tr>\n\n<tr>\n<td><strong>Remaining Budget</strong></td>\n<td style=\"color:#dc2626;font-weight:bold;\">\nPKR {{ $json.remaining }}\n</td>\n</tr>\n\n</table>\n\n<div style=\"margin-top:30px;padding:18px;background:#fff4e5;border-left:5px solid #f59e0b;border-radius:6px;\">\n\n<strong>Recommendation</strong>\n\n<p style=\"margin-top:10px;color:#555;\">\nReview your spending in this category to avoid exceeding your monthly budget further.\n</p>\n\n</div>\n\n</td>\n</tr>\n\n<!-- Footer -->\n<tr>\n<td style=\"background:#f8fafc;padding:20px;text-align:center;font-size:13px;color:#666;\">\n\nExpense Categorizer &amp; Budget Alert\n\n<br>\n\nHelping you make smarter financial decisions.\n\n</td>\n</tr>\n\n</table>\n\n</td>\n</tr>\n</table>\n\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        -144
+      ],
+      "id": "50b1df85-de9c-4a4c-867b-376cef0365a9",
+      "name": "Send a message",
+      "webhookId": "4cf1140a-bf8f-48bc-9448-b09f6bbb6a04"
+    },
+    {
+      "parameters": {
+        "content": "💰 Expense Categorizer & Budget Alert | n8n AI Automation\n\nJust completed another AI automation workflow using n8n! 🚀\n\nThis workflow helps users track their monthly expenses without manually categorizing every transaction.\n\n🔹 Workflow Features\n\n✅ Collect expenses through a form\n✅ AI automatically categorizes each expense\n✅ Classifies spending as Need or Want\n✅ Stores data in Google Sheets\n✅ Calculates monthly spending by category\n✅ Compares expenses against predefined monthly budgets\n✅ Sends a professional email alert when a budget is exceeded\n\n💡 Budget Categories\nFood & Dining\nTransport\nUtilities & Bills\nShopping\nEntertainment\nHealth\nOther\n\nInstead of reviewing expenses at the end of the month, users receive an instant notification as soon as a category exceeds its budget—helping them make smarter financial decisions before overspending becomes a bigger problem.\n\nBuilding real-world AI automations that combine AI, Google Sheets, JavaScript, business logic, and email notifications is a great way to solve everyday financial challenges.\n\nI'm continuously expanding my portfolio with practical n8n AI Automation projects.\n\n#n8n #AIAutomation #WorkflowAutomation #GoogleSheets #JavaScript #ArtificialIntelligence #FinanceAutomation #NoCode #LowCode #Productivity #Automation #LinkedIn",
+        "height": 608,
+        "width": 1728
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1248,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "8260407b-8f95-4183-8a57-4135b2da5327",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a6b1754c-0711-4585-b158-634f73ea917d",
+  "id": "nDgYQYk95pk6hz8b",
+  "tags": []
+}
