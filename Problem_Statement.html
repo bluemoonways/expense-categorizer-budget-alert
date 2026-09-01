@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project B6 — Expense Categorizer & Budget Alert | Problem Statement</title>
+<style>
+  :root{--brand:#0f766e;--brand-2:#0d9488;--accent:#e0a92e;--ink:#1a202c;--muted:#4a5568;--line:#e2e8f0;--band:#e3f5f1;}
+  *{box-sizing:border-box;} body{font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);line-height:1.6;max-width:860px;margin:0 auto;padding:32px;font-size:14.5px;}
+  .hero{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;padding:30px 34px;border-radius:10px;margin-bottom:24px;}
+  .hero .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.85;}
+  .hero h1{margin:6px 0 0;font-size:27px;}
+  h2{color:var(--brand);border-bottom:2px solid var(--band);padding-bottom:6px;margin:28px 0 10px;font-size:18px;}
+  .pill{display:inline-block;background:var(--band);color:var(--brand);border-radius:20px;padding:3px 12px;font-size:12px;margin:2px 4px 2px 0;font-weight:600;}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px;} th{background:var(--brand);color:#fff;text-align:left;padding:8px 10px;} td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .callout{border-left:3px solid var(--accent);background:#fdf7e9;padding:12px 16px;border-radius:6px;margin:12px 0;}
+  ul,ol{padding-left:22px;} li{margin:5px 0;} code{background:#eef2f7;padding:1px 6px;border-radius:4px;font-size:12.5px;}
+  .foot{margin-top:32px;padding-top:14px;border-top:2px solid var(--line);color:var(--muted);font-size:12.5px;}
+</style>
+</head>
+<body>
+<div class="hero"><div class="kicker">Project B6 · Finance</div><h1>Expense Categorizer &amp; Budget Alert</h1></div>
+
+<p><span class="pill">AI Classification</span><span class="pill">Google Sheets</span><span class="pill">Code / Aggregation</span><span class="pill">IF logic</span><span class="pill">Email Alert</span></p>
+
+<h2>The Situation</h2>
+<p>Most people (and small businesses) have no idea where their money goes until the month is over. They jot
+expenses in a notebook or a messy sheet, but nobody sits down to tag each one as "food" or "transport" — so
+budgeting never actually happens.</p>
+
+<h2>The Pain</h2>
+<ul>
+  <li>Categorizing every transaction by hand is boring, so it doesn't get done.</li>
+  <li>By the time you notice you overspent on dining, the money's already gone.</li>
+  <li>No early warning — budgets are reviewed too late to change behaviour.</li>
+</ul>
+
+<h2>The Goal</h2>
+<p>Log an expense in two seconds. The AI tags it with the right category and whether it's a need or a want,
+saves it to your sheet, and the moment a category crosses its monthly budget, you get an email alert — while
+you can still do something about it.</p>
+
+<h2>What's New Here</h2>
+<div class="callout"><strong>AI classification + real aggregation + a threshold alert.</strong> This is the first project
+that <em>reads its own data back</em>: after logging the expense it re-reads the sheet, sums the month's spend
+in that category with a Code node, and only alerts when a real budget is breached. AI + math + logic together.</div>
+
+<h2>The Pipeline</h2>
+<ol>
+  <li><strong>Add Expense</strong> (Form): description, amount, date.</li>
+  <li><strong>AI categorize</strong> → category + need/want + merchant + note (Structured Output).</li>
+  <li><strong>Append</strong> the tagged expense to Google Sheets.</li>
+  <li><strong>Read all expenses</strong> back and <strong>sum</strong> this month's total for that category (Code node).</li>
+  <li><strong>IF over budget</strong> → send a Gmail <strong>budget alert</strong>.</li>
+</ol>
+
+<h2>Default Monthly Budgets (editable in the Code node)</h2>
+<table>
+  <tr><th>Category</th><th>Budget (PKR)</th></tr>
+  <tr><td>Food &amp; Dining</td><td>30,000</td></tr>
+  <tr><td>Transport</td><td>15,000</td></tr>
+  <tr><td>Utilities &amp; Bills</td><td>25,000</td></tr>
+  <tr><td>Shopping</td><td>20,000</td></tr>
+  <tr><td>Entertainment</td><td>10,000</td></tr>
+  <tr><td>Health</td><td>15,000</td></tr>
+  <tr><td>Other</td><td>10,000</td></tr>
+</table>
+
+<h2>Extensions (great homework)</h2>
+<ul>
+  <li>Add a <strong>Schedule Trigger</strong> to email a full monthly spending summary on the 1st.</li>
+  <li>Feed transactions in bulk from a bank CSV instead of one at a time.</li>
+  <li>Add a second alert at 80% of budget ("you're close") using another IF branch.</li>
+</ul>
+
+<div class="foot">Deliverable: <code>Expense_Categorizer_Budget.json</code>. Create a Google Sheet with headers:
+Date, Description, Amount, Category, Essential, Merchant, Note. | Class 6 · AI Automation with n8n</div>
+</body>
+</html>
